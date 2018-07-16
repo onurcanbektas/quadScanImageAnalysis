@@ -1,10 +1,10 @@
 clear
-lib_dir = strcat(pwd, '/MatlabFunctions')
-addpath(pwd, '/MatlabFunctions')
-filename = "03082017X.txt";
+lib_dir = strcat(pwd, '/matlabFunctions')
+addpath(pwd, '/matlabFunctions')
+filename = "0308Y.txt";
 %% (+1) for defocusing plane, (-1) for focusing plane
-sign_focus_or_defocus = -1;
-beam_check_ON = 0;
+sign_focus_or_defocus = 1;
+beam_check_ON = 1;
 %% Needed only if sign_focus_or_defocus is equal to 1
 rowofTheParameterToCheck = 15;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -53,15 +53,14 @@ emittance1 = sqrt(sigma11.^2 .* sigma22.^2 - sigma12.^2)
 if(beam_check_ON == 1)
 
 syms MQ_sym(kvar) MQD_sym(kvar) sigma(s11, s12, s22)
-MQ_sym(kvar) = [cos((kvar.^(1./2)) .* l),  sin((kvar.^(1./2)) .* l) ./ (kvar.^(1./2)); (-1).* ((kvar.^(1./2)) .* sin((kvar.^(1./2)).* l)), cos((kvar.^(1./2)) .* l)]
+MQ_sym(kvar) = [cos((kvar.^(1./2)) .* l),  sin((kvar.^(1./2)) .* l) ./ (kvar.^(1./2)); (-1).* ((kvar.^(1./2)) .* sin((kvar.^(1./2)).* l)), cos((kvar.^(1./2)) .* l)];
 MDrift = [1, d; 0, 1];
 MQD_sym(kvar) = MDrift * MQ_sym(kvar);
 tempMQD = matlabFunction(MQD_sym);
 MQD  = @(kvar) tempMQD(kvar);
 
-k_temp = k(rowofTheParameterToCheck)
-MQD(k_temp)
-result = MQD(k_temp) * [sigma11.^2, sigma12; sigma12, sigma22.^2] * MQD(k_temp)'
+k_temp = k(rowofTheParameterToCheck);
+result = MQD(k_temp) * [sigma11.^2, sigma12; sigma12, sigma22.^2] * MQD(k_temp)';
 
 Endsigma11 = result(1,1).^(1./2)
 Endsigma12 = result(1,2)

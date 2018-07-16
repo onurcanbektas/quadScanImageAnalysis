@@ -1,6 +1,6 @@
 clear
-lib_dir = strcat(pwd, '/MatlabFunctions')
-scan_dir = strcat(pwd, '/Scan')
+lib_dir = strcat(pwd, '/matlabFunctions');
+scan_dir = strcat(pwd, '/scan');
 addpath(scan_dir)
 addpath(lib_dir)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
