@@ -1,7 +1,7 @@
 clear
-lib_dir = strcat(pwd, '/matlabFunctions')
-addpath(pwd, '/matlabFunctions')
-filename = "0308Y.txt";
+lib_dir = strcat(pwd, '/matlabFunctions');
+addpath(lib_dir)
+filename = "03082017X.txt";
 %% (+1) for defocusing plane, (-1) for focusing plane
 sign_focus_or_defocus = 1;
 beam_check_ON = 1;
