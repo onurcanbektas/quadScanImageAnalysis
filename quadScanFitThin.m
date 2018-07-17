@@ -49,23 +49,17 @@ sigma22 = sqrt(( p(3) - (sigma11.^2) - (2.* d .* sigma12)) ./ (d.^2))
 
 emittance1 = sqrt(sigma11.^2 .* sigma22.^2 - sigma12.^2)
 
+syms thin(kvar)
+thin(kvar) = [1 + kvar * l * d, d; kvar*l, 1]
+temp_thin = matlabFunction(thin);
+thin = @(kvar) temp_thin(kvar);
 
-if(beam_check_ON == 1)
+k_temp = (1) .* k(15)
+thin(k_temp)
+result_thin = thin(k_temp) * [sigma11.^2, sigma12; sigma12, sigma22.^2] * (thin(k_temp)')
 
-syms MQ_sym(kvar) MQD_sym(kvar) sigma(s11, s12, s22)
-MQ_sym(kvar) = [cos((kvar.^(1./2)) .* l),  sin((kvar.^(1./2)) .* l) ./ (kvar.^(1./2)); (-1).* ((kvar.^(1./2)) .* sin((kvar.^(1./2)).* l)), cos((kvar.^(1./2)) .* l)];
-MDrift = [1, d; 0, 1];
-MQD_sym(kvar) = MDrift * MQ_sym(kvar);
-tempMQD = matlabFunction(MQD_sym);
-MQD  = @(kvar) tempMQD(kvar);
+Endsigma11 = result_thin(1,1).^(1./2)
+Endsigma12 = result_thin(1,2)
+Endsigma22 = result_thin(2,2).^(1./2)
 
-k_temp = k(rowofTheParameterToCheck);
-result = MQD(k_temp) * [sigma11.^2, sigma12; sigma12, sigma22.^2] * MQD(k_temp)';
-
-Endsigma11 = result(1,1).^(1./2)
-Endsigma12 = result(1,2)
-Endsigma22 = result(2,2).^(1./2)
-
-emittance2 = sqrt(Endsigma11.^2 .* Endsigma22.^2 - Endsigma12.^2)
- 
-end
+emittance2 = sqrt( Endsigma11.^2 * Endsigma22.^2 - Endsigma12.^2)
