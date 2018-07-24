@@ -1,9 +1,13 @@
+%% @author: Onurcan Bektaş
+%%          onurcan.bektas@metu.edu.tr
 clear
 lib_dir = strcat(pwd, '/matlabFunctions');
+output_dir = strcat(pwd, '/output');
 addpath(lib_dir)
-filename = "0308Y.txt";
+addpath(output_dir)
+filename = '03082017XORJ.txt';
 %% (+1) for defocusing plane, (-1) for focusing plane
-sign_focus_or_defocus = 1;
+sign_focus_or_defocus = -1;
 beam_check_ON = 1;
 %% Needed only if sign_focus_or_defocus is equal to 1
 rowofTheParameterToCheck = 15;
@@ -32,15 +36,19 @@ b = (sign_focus_or_defocus) .* k .* l;
 d = 1.88;
 
 if b(1) > 0
-    w = b(1):0.001:(b(length(b) -1 ) + 0.2);
+    w = b(1):0.001:(b(length(b)-1) + 0.2);
 elseif b(1) < 0
-    w = (b(length(b)-1 ) - 0.2):0.001:b(1);
+    w = (b(length(b)-1) - 0.2):0.001:b(1);
 end
 p = polyfit(b,data,2)
 xfit = polyval(p,w);  
 plot(w,xfit,'r');
 hold on
 plot(b, data, '*')
+title('The measurement of beam size versus 1/f');
+legend('fit','data','Location', 'northwest');
+xlabel(' -1/f  (in 1/m)');
+ylabel('Beam size sigma^2 (in m^2)');
 hold off
 
 sigma11 = sqrt(p(1) ./ (d .^2))
@@ -49,12 +57,15 @@ sigma22 = sqrt(( p(3) - (sigma11.^2) - (2.* d .* sigma12)) ./ (d.^2))
 
 emittance1 = sqrt(sigma11.^2 .* sigma22.^2 - sigma12.^2)
 
+kor = acos(emittance1 ./ (sigma11 .* sigma22))
+sin(kor)
+
 syms thin(kvar)
 thin(kvar) = [1 + kvar * l * d, d; kvar*l, 1]
 temp_thin = matlabFunction(thin);
 thin = @(kvar) temp_thin(kvar);
 
-k_temp = (1) .* k(15)
+k_temp = (sign_focus_or_defocus) .* k(rowofTheParameterToCheck)
 thin(k_temp)
 result_thin = thin(k_temp) * [sigma11.^2, sigma12; sigma12, sigma22.^2] * (thin(k_temp)')
 

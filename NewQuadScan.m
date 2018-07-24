@@ -1,8 +1,12 @@
+%% @author: Onurcan Bektaş
+%%          onurcan.bektas@metu.edu.tr
 clear
 lib_dir = strcat(pwd, '/matlabFunctions');
 scan_dir = strcat(pwd, '/scan');
+output_dir = strcat(pwd, '/output/');
 addpath(scan_dir)
 addpath(lib_dir)
+addpath(output_dir)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -17,11 +21,11 @@ fit_ON = 1;
 
 % Do we want to save the result of the fitting parameters to the end of file ?
 save_the_fit_parameters = 0;
-result_filename = '0308X.txt';
-magnetic_field_magnitude = 0.04654967;
+result_filename = '0308Y.txt';
+magnetic_field_magnitude = 0.24796652;
 
 %For x -> 0; for y-> 1
-x_or_y =  0;
+x_or_y =  1;
 pixel_to_mm_X = 7.07 ./ 87;
 pixel_to_mm_Y = 10 ./ 138; %% For 29.07 
 
@@ -30,8 +34,8 @@ numberOfExtraCuts = 1;
 z1 = 1;
 z2 = 322;
 % First extra little cut interval
-fit_extra11 = 240; 
-fit_extra12 = 270;
+fit_extra11 = 206;
+fit_extra12 = 229;
 % Second extra little cut interval
 fit_extra21 = 299;
 fit_extra22 = 342;
@@ -109,7 +113,8 @@ sigma = soln(3) * pixel_to_mm
 offset = soln(4)
 
 if(save_the_fit_parameters == 1)
-	pFile = fopen (result_filename,'a+');
+    save_dir = strcat(output_dir, result_filename);
+	pFile = fopen (save_dir, 'a+');
 	fprintf(pFile, '\n%s %f %.5f %d %d %d %d %d %d %d',filename, sigma, magnetic_field_magnitude, numberOfExtraCuts, z1, z2, fit_extra11, fit_extra12, fit_extra21, fit_extra22)
 end
 end

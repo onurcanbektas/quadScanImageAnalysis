@@ -1,3 +1,5 @@
+%% @author: Onurcan Bektaş
+%%          onurcan.bektas@metu.edu.tr
 clear
 lib_dir = strcat(pwd, '/matlabFunctions');
 addpath(lib_dir)
